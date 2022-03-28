@@ -1,0 +1,36 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider          = "postgresql"
+  url               = env("DATABASE_URL")
+  shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
+}
+
+model Users {
+  Id             Int     @id(map: "PK_Users") @default(autoincrement())
+  Email          String  @unique(map: "users_email_uindex")
+  Password       String
+  Name           String?
+  isVerified     Boolean
+  ActivationLink String? @unique(map: "users_activationlink_uindex")
+}
+
+model Tokens {
+  Id     Int    @id(map: "tokens_pk") @unique(map: "tokens_id_uindex") @default(autoincrement())
+  UserId Int    @unique(map: "tokens_userid_uindex")
+  Token  String @unique(map: "tokens_token_uindex")
+}
+
+model Reviews {
+  Id            Int      @id(map: "reviews_pk") @unique(map: "reviews_id_uindex") @default(autoincrement())
+  UserId        Int
+  ServiceId     Int
+  Advantages    String?
+  Disadvantages String?
+  Comment       String?
+  Likes         Int
+  Rate          Int
+  CreateDate    DateTime @db.Date
+}
